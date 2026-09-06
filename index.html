@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFFFFF">
+<title>SOUNDTAP by WM DIGITALS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { position: fixed; inset: 0; overflow: hidden; }
+  html, body { height: 100%; }
+  body {
+    height: 100vh; height: 100dvh; overflow: hidden; background: #FFFFFF;
+    font-family: 'Nunito', 'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, -apple-system, sans-serif;
+    -webkit-user-select: none; user-select: none;
+  }
+  html, body, #app { touch-action: none; overscroll-behavior: none; }
+  #app { height: 100vh; height: 100dvh; width: 100vw; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+
+  /* Header */
+  header {
+    width: 100%; padding: 16px 18px; padding-top: max(16px, env(safe-area-inset-top));
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex: 0 0 auto;
+  }
+  .brand { flex: 0 1 auto; line-height: 1.05; font-family: 'Arial Rounded MT Bold', 'Nunito', 'Trebuchet MS', system-ui, -apple-system, sans-serif; }
+  .brand .logo { display: block; font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+  .brand .logo span { display: inline-block; }
+  .brand .sub { display: block; font-size: 12px; font-weight: 800; color: #FF3B30; letter-spacing: .4px; margin-top: 2px; }
+  .lang-pill { display: flex; background: #F2F2F7; border-radius: 999px; padding: 4px; gap: 2px; flex: 0 0 auto; box-shadow: inset 0 0 0 1px #E5E5EA; }
+  .lang-btn { border: none; background: transparent; font-family: inherit; font-size: 14px; font-weight: 900; color: #8E8E93; padding: 8px 12px; border-radius: 999px; cursor: pointer; }
+  .lang-btn.active { background: #0055FF; color: #FFFFFF; }
+
+  main { flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 16px calc(20px + env(safe-area-inset-bottom)); overflow: hidden; min-height: 0; }
+  .stage { width: 100%; max-width: 520px; flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 0; }
+
+  .blank { color: #C7C7CC; text-align: center; }
+  .blank .headset { font-size: 78px; line-height: 1; }
+  .blank .hint { font-size: 15px; font-weight: 700; color: #AEAEB2; margin-top: 12px; }
+
+  .animal-name { font-family: inherit; font-weight: 900; letter-spacing: 1px; text-align: center; line-height: 1.05; font-size: clamp(40px, 10vw, 80px); text-shadow: 0 3px 0 rgba(0,0,0,.06); padding: 0 4px; }
+  .img-wrap { flex: 1 1 auto; width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px 0; }
+
+  /* ===== REQUIRED EXACT IMG SIZING ===== */
+  .animal-img {
+    width: 80%;
+    max-width: 320px;
+    height: 250px;
+    object-fit: contain;
+    border-radius: 16px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .action-area { width: 100%; max-width: 560px; padding: 10px 16px 0; flex: 0 0 auto; }
+  .action-btn { width: 100%; border: none; border-radius: 999px; font-family: inherit; font-weight: 900; font-size: clamp(22px, 6vw, 30px); letter-spacing: .5px; padding: 22px 16px; cursor: pointer; color: #FFFFFF; }
+  .action-btn + .action-btn { margin-top: 14px; }
+  .step-play   { background: #0055FF; box-shadow: 0 10px 22px rgba(0,85,255,.32); }
+  .step-reveal { background: #FFB800; color: #3a2c00; box-shadow: 0 10px 22px rgba(255,184,0,.4); }
+  .step-next   { background: #00A859; box-shadow: 0 10px 22px rgba(0,168,89,.34); }
+  .replay-btn { margin: 14px auto 0; border: none; border-radius: 999px; font-family: inherit; font-weight: 900; font-size: 18px; padding: 14px 24px; cursor: pointer; background: #FFB800; color: #3a2c00; box-shadow: 0 8px 18px rgba(255,184,0,.4); }
+  .round-track { margin-top: 12px; text-align: center; font-size: 14px; font-weight: 800; color: #C7C7CC; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand"><span class="logo"><span style="color:#FF3B30">S</span><span style="color:#FF9500">O</span><span style="color:#FFCC00">U</span><span style="color:#34C759">N</span><span style="color:#00C7BE">D</span><span style="color:#007AFF">T</span><span style="color:#5856D6">A</span><span style="color:#AF52DE">P</span></span><span class="sub">by WM DIGITALS</span></div>
+    <div class="lang-pill" id="langPill">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="af">AF</button>
+      <button class="lang-btn" data-lang="xh">XH</button>
+    </div>
+  </header>
+  <main>
+    <div class="stage" id="stage"></div>
+  </main>
+  <div class="action-area" id="actionArea"></div>
+  <div class="round-track" id="roundTrack">ROUND 1</div>
+</div>
+
+<script>
+/* ================= DATA SOURCE (built-in) ================= */
+var ANIMALS=[
+  {"id":"dog","name_en":"DOG","name_af":"HOND","name_xh":"INJA","image":"https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&q=80&auto=format&fit=crop","say":"Woof woof!","sound":"https://archive.org/download/various-animal-sounds/big-dog-barking-112717.mp3"},
+  {"id":"cat","name_en":"CAT","name_af":"KAT","name_xh":"IKATI","image":"https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=80&auto=format&fit=crop","say":"Meow meow!","sound":"https://archive.org/download/various-animal-sounds/cat-miaw-38311.mp3"},
+  {"id":"cow","name_en":"COW","name_af":"BEES","name_xh":"INKOMO","image":"https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&q=80&auto=format&fit=crop","say":"Moo!","sound":"https://archive.org/download/various-animal-sounds/mixkit-cow-moo-1744.mp3"},
+  {"id":"horse","name_en":"HORSE","name_af":"PERD","name_xh":"IHASHE","image":"https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800&q=80&auto=format&fit=crop","say":"Neigh!","sound":"https://archive.org/download/various-animal-sounds/mixkit-stallion-horse-neigh-1762.mp3"},
+  {"id":"sheep","name_en":"SHEEP","name_af":"SKAAP","name_xh":"IGUSHA","image":"https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=800&q=80&auto=format&fit=crop","say":"Baa baa!","sound":"https://archive.org/download/various-animal-sounds/mixkit-sheep-sounds-1741.mp3"},
+  {"id":"goat","name_en":"GOAT","name_af":"BOK","name_xh":"IMBUZI","image":"https://images.unsplash.com/photo-1753772662908-4aeb8b7d2f63?w=800&q=80&auto=format&fit=crop","say":"Maa maa!","sound":"https://archive.org/download/various-animal-sounds/mixkit-goat-single-baa-1760.mp3"},
+  {"id":"rooster","name_en":"ROOSTER","name_af":"HAAN","name_xh":"INKUKU","image":"https://images.unsplash.com/photo-1683963373661-8dec9bb7ed2e?w=800&q=80&auto=format&fit=crop","say":"Cock-a-doodle-doo!","sound":"https://archive.org/download/various-animal-sounds/mixkit-rooster-crowing-in-the-morning-2462.mp3"},
+  {"id":"donkey","name_en":"DONKEY","name_af":"DONKIE","name_xh":"I-ESILE","image":"https://images.unsplash.com/photo-1568495732369-3a3f5b5290dd?w=800&q=80&auto=format&fit=crop","say":"Hee-haw!","sound":"https://archive.org/download/various-animal-sounds/mixkit-donkey-crying-310.mp3"},
+  {"id":"lion","name_en":"LION","name_af":"LEEU","name_xh":"INGONYAMA","image":"https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800&q=80&auto=format&fit=crop","say":"Roar!","sound":"https://archive.org/download/various-animal-sounds/mixkit-wild-lion-animal-roar-6.mp3"},
+  {"id":"elephant","name_en":"ELEPHANT","name_af":"OLIFANT","name_xh":"INDLOVU","image":"https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=800&q=80&auto=format&fit=crop","say":"Trumpet!","sound":"https://archive.org/download/various-animal-sounds/elephant-trumpets-growls-6047.mp3"},
+  {"id":"baboon","name_en":"BABOON","name_af":"BOBBEJAAN","name_xh":"IMFENE","image":"https://images.unsplash.com/photo-1759170211205-3ca43b790013?w=800&q=80&auto=format&fit=crop","say":"Ooh ooh!","sound":"https://archive.org/download/various-animal-sounds/mixkit-jungle-ape-sound-2419.mp3"},
+  {"id":"zebra","name_en":"ZEBRA","name_af":"SEBRA","name_xh":"IQULA","image":"https://images.unsplash.com/photo-1548417153-6f101b4e6ca4?w=800&q=80&auto=format&fit=crop","say":"Zebra bark!","sound":"https://archive.org/download/various-animal-sounds/mixkit-stallion-horse-neigh-1762.mp3"},
+  {"id":"frog","name_en":"FROG","name_af":"PADDA","name_xh":"ISELE","image":"https://images.unsplash.com/photo-1496070242169-b672c576566b?w=800&q=80&auto=format&fit=crop","say":"Ribbit ribbit!","sound":"https://archive.org/download/various-animal-sounds/frog-croaks-22312.mp3"},
+  {"id":"owl","name_en":"OWL","name_af":"UIL","name_xh":"ISIKHOVA","image":"https://images.unsplash.com/photo-1500373994708-4d781bd7bd15?w=800&q=80&auto=format&fit=crop","say":"Hoo hoo!","sound":"https://archive.org/download/various-animal-sounds/mixkit-owl-in-a-forest-2466.mp3"},
+  {"id":"snake","name_en":"SNAKE","name_af":"SLANG","name_xh":"INYOKA","image":"https://images.unsplash.com/photo-1765009253836-7e917c8d8377?w=800&q=80&auto=format&fit=crop","say":"Hiss!","sound":"https://archive.org/download/various-animal-sounds/mixkit-rattlesnake-moving-the-tail-2497.mp3"},
+  {"id":"hadeda","name_en":"HADEDA","name_af":"HADEDA","name_xh":"INGQANGA","image":"https://images.unsplash.com/photo-1753909828602-8a7d8b817c88?w=800&q=80&auto=format&fit=crop","say":"Haa-haa!","sound":"https://upload.wikimedia.org/wikipedia/commons/7/75/Bostrychia_hagedash_hagedash%2C_aandskemerroep%2C_2022-11-26_18h56%2C_Moreletakloof_NR%2C_a.mp3"},
+  {"id":"blue_crane","name_en":"BLUE CRANE","name_af":"BLOUKRAANVOEL","name_xh":"INDWE","image":"https://images.unsplash.com/photo-1777465813552-2bdbc498f593?w=800&q=80&auto=format&fit=crop","say":"Crane call!","sound":"https://upload.wikimedia.org/wikipedia/commons/8/83/Grus_grus_-_Common_Crane_XC594758.mp3"},
+  {"id":"cape_robin","name_en":"CAPE ROBIN","name_af":"GEWONE JANFREDERIK","name_xh":"UBHEDE","image":"https://images.unsplash.com/photo-1782714745255-e8708ebb8692?w=800&q=80&auto=format&fit=crop","say":"Tweet tweet!","sound":"https://upload.wikimedia.org/wikipedia/commons/3/37/Cossypha_caffra_-_Cape_Robin-Chat_XC367241.mp3"}
+];
+
+/* ================= State ================= */
+var NAME_COLORS = ['#0055FF', '#FFB800', '#00A859', '#FF3B30'];
+var LANG_FIELD  = { en: 'name_en', af: 'name_af', xh: 'name_xh' };
+var lang      = 'en';
+var cardIndex = 0;
+var card      = null;
+var phase     = 'listen';   // listen -> reveal -> show
+var imgCache  = {};
+var audio     = null;
+var soundPlaying = false;
+
+var stage = document.getElementById('stage');
+var actionArea = document.getElementById('actionArea');
+var track = document.getElementById('roundTrack');
+var langBtns = document.querySelectorAll('.lang-btn');
+
+/* ================= Audio: reliable fallback (never silent) ================= */
+/* Primary: Web Audio API synthesized call (works offline, always plays).
+   If speechSynthesis is available we ALSO speak the phonetic sound so there is
+   always an audible result even on browsers that mute AudioContext. */
+var AC = window.AudioContext || window.webkitAudioContext || null;
+
+function playFallbackSound(animal) {
+  /* Guaranteed audible output — Web Audio + speech synthesis together. */
+  if (AC) {
+    try {
+      var ctx = new AC();
+      var dur = 0.55;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      var base = 340 + ((cardIndex % 5) * 60);  // vary pitch per animal
+      osc.type = 'triangle';
+      osc.frequency.value = base;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.45, ctx.currentTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    } catch (e) {}
+  }
+  if (window.speechSynthesis) {
+    try {
+      var u = new SpeechSynthesisUtterance((animal.say || animal.name_en));
+      u.rate = 0.9; u.pitch = 1.1; u.volume = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+}
+
+function playSound() {
+  soundPlaying = true;
+  var started = false;
+  /* PRIMARY: play the real MP3 call; fall back to Web Audio + speech ONLY on failure. */
+  if (card.sound) {
+    try {
+      if (!audio) { audio = new Audio(card.sound); audio.preload = 'auto'; }
+      else { try { audio.currentTime = 0; } catch(e){} }
+      var fallbackTimer = setTimeout(function(){ if(!started){ playFallbackSound(card); } }, 1600);
+      audio.onerror = function(){ clearTimeout(fallbackTimer); if(!started){ playFallbackSound(card); } };
+      var p = audio.play();
+      if (p && p.catch) {
+        p.catch(function(){ if(!started){ playFallbackSound(card); } });
+      }
+      audio.onplay = function(){ started = true; clearTimeout(fallbackTimer); };
+    } catch (e) { playFallbackSound(card); }
+  } else {
+    playFallbackSound(card);
+  }
+  setTimeout(function(){ soundPlaying = false; }, 900);
+}
+
+/* ================= Preload ================= */
+function preloadImage(url) { if (!imgCache[url]) { var i = new Image(); i.src = url; imgCache[url] = i; } return imgCache[url]; }
+function preloadAudio() {
+  /* Zero-lag: pre-instantiate the Audio element and start buffering the MP3. */
+  try {
+    if (audio) { try { audio.pause(); audio.src = ''; } catch(e){} }
+    audio = new Audio(card.sound);
+    audio.preload = 'auto';
+  } catch (e) {}
+}
+function preloadUpcoming() {
+  if (card) preloadImage(card.image);
+  var up = ANIMALS[(cardIndex + 1) % ANIMALS.length];
+  if (up) preloadImage(up.image);
+}
+
+/* ================= Render ================= */
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderBlank() {
+  stage.innerHTML = '<div class="blank"><div class="headset">&#127911;</div><div class="hint">LISTEN&#8230;</div></div>';
+}
+function renderReveal() {
+  var nameText = esc(card[LANG_FIELD[lang]] || card.name_en);
+  var color = NAME_COLORS[cardIndex % NAME_COLORS.length];
+  stage.innerHTML =
+    '<div class="animal-name" style="color:' + color + '">' + nameText + '</div>' +
+    '<div class="img-wrap"><img class="animal-img" src="' + card.image + '" alt="' + esc(card.name_en) + '"></div>' +
+    '<button class="replay-btn" id="replayBtn">&#128266; Play Sound Again</button>';
+}
+
+/* ================= Flow ================= */
+function startRound(i) {
+  cardIndex = ((i % ANIMALS.length) + ANIMALS.length) % ANIMALS.length;
+  card = ANIMALS[cardIndex];
+  track.textContent = 'ROUND ' + (cardIndex + 1);
+  phase = 'listen';
+  preloadAudio();           // zero-lag: pre-instantiate + preload='auto'
+  renderBlank();
+  renderListenActions();
+  preloadUpcoming();
+}
+function play() {
+  playSound();              // re-playable; button stays visible
+}
+function reveal() {
+  phase = 'show';
+  renderReveal();           // NOW show name + photo + Play Again button
+  bindReplay();
+  renderNextActions();
+}
+function next() { startRound(cardIndex + 1); }
+
+function renderListenActions() {
+  actionArea.innerHTML =
+    '<button class="action-btn step-play" id="btnPlay">&#128266; PLAY SOUND</button>' +
+    '<button class="action-btn step-reveal" id="btnReveal">&#128065; REVEAL</button>';
+  document.getElementById('btnPlay').addEventListener('click', function(){ play(); });
+  document.getElementById('btnReveal').addEventListener('click', function(){ reveal(); });
+}
+function renderNextActions() {
+  actionArea.innerHTML =
+    '<button class="action-btn step-next" id="btnNext">NEXT ANIMAL &#10132;</button>';
+  document.getElementById('btnNext').addEventListener('click', function(){ next(); });
+}
+function bindReplay() {
+  var rp = document.getElementById('replayBtn');
+  if (rp) rp.addEventListener('click', function(){ play(); });
+}
+
+/* ================= Main action handler ================= */
+
+/* ================= Language switch ================= */
+langBtns.forEach(function (b) {
+  b.addEventListener('click', function () {
+    langBtns.forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    lang = b.getAttribute('data-lang');
+    if (phase === 'show' && card) {
+      var nameEl = stage.querySelector('.animal-name');
+      if (nameEl) {
+        nameEl.textContent = card[LANG_FIELD[lang]] || card.name_en;
+        nameEl.style.color = NAME_COLORS[cardIndex % NAME_COLORS.length];
+      }
+    }
+  });
+});
+
+/* ================= Init ================= */
+(function init() {
+  ANIMALS.forEach(function (a) { preloadImage(a.image); });
+  startRound(0);
+})();
+</script>
+</body>
+</html>
